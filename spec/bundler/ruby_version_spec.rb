@@ -306,6 +306,15 @@ RSpec.describe "Bundler::RubyVersion and its subclasses" do
         it_behaves_like "there are no differences"
       end
 
+      context "successfully matches major ruby version requirement" do
+        let(:version)              { "2.5" }
+        let(:engine)               { "ruby" }
+        let(:other_version)        { "2.5.3" }
+        let(:other_engine)         { "ruby" }
+
+        it_behaves_like "there are no differences"
+      end
+
       context "successfully matches multiple gem requirements" do
         let(:version)              { [">= 2.0.0", "< 2.4.5"] }
         let(:patchlevel)           { "< 643" }
@@ -341,6 +350,71 @@ RSpec.describe "Bundler::RubyVersion and its subclasses" do
         let(:other_patchlevel)     { "642" }
         let(:other_engine)         { "ruby" }
         let(:other_engine_version) { "2.0.5" }
+
+        it_behaves_like "there is a difference in the versions"
+      end
+
+      context "successfully detects bad ruby version requirements (insufficient revision)" do
+        let(:version)              { "~> 2.5.3" }
+        let(:patchlevel)           { "459" }
+        let(:engine)               { "ruby" }
+        let(:engine_version)       { "~> 2.5.3" }
+        let(:other_version)        { "2.5.1" }
+        let(:other_patchlevel)     { "459" }
+        let(:other_engine)         { "ruby" }
+        let(:other_engine_version) { "2.5.1" }
+
+        it_behaves_like "there is a difference in the versions"
+      end
+
+      context "successfully detects bad ruby version requirements (insufficient minor)" do
+        let(:version)              { "~> 2.5.3" }
+        let(:patchlevel)           { "459" }
+        let(:engine)               { "ruby" }
+        let(:engine_version)       { "~> 2.5.3" }
+        let(:other_version)        { "2.4.5" }
+        let(:other_patchlevel)     { "459" }
+        let(:other_engine)         { "ruby" }
+        let(:other_engine_version) { "2.4.5" }
+
+        it_behaves_like "there is a difference in the versions"
+      end
+
+      context "successfully detects bad ruby version requirements (incorrect minor)" do
+        let(:version)              { "~> 2.3.3" }
+        let(:patchlevel)           { "459" }
+        let(:engine)               { "ruby" }
+        let(:engine_version)       { "~> 2.3.3" }
+        let(:other_version)        { "2.4.5" }
+        let(:other_patchlevel)     { "459" }
+        let(:other_engine)         { "ruby" }
+        let(:other_engine_version) { "2.4.5" }
+
+        it_behaves_like "there is a difference in the versions"
+      end
+
+      context "successfully detects bad ruby version requirements (insufficient minor)" do
+        let(:version)              { "2.5" }
+        let(:patchlevel)           { "459" }
+        let(:engine)               { "ruby" }
+        let(:engine_version)       { "2.5" }
+        let(:other_version)        { "2.4.5" }
+        let(:other_patchlevel)     { "459" }
+        let(:other_engine)         { "ruby" }
+        let(:other_engine_version) { "2.4.5" }
+
+        it_behaves_like "there is a difference in the versions"
+      end
+
+      context "successfully detects bad ruby version requirements (incorrect minor)" do
+        let(:version)              { "2.3" }
+        let(:patchlevel)           { "459" }
+        let(:engine)               { "ruby" }
+        let(:engine_version)       { "2.3" }
+        let(:other_version)        { "2.4.5" }
+        let(:other_patchlevel)     { "459" }
+        let(:other_engine)         { "ruby" }
+        let(:other_engine_version) { "2.4.5" }
 
         it_behaves_like "there is a difference in the versions"
       end
